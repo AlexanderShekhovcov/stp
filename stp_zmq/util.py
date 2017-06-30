@@ -44,25 +44,30 @@ def _write_secret_public_keys(public_key_file_path, secret_key_file_path, public
 
 def _write_public_key_file(key_filename, current_time, public_key):
     banner = _cert_public_banner.format(current_time)
+    _create_file_with_mode(key_filename, 0o644)
     _write_key_file(key_filename,
                     banner,
                     public_key,
                     secret_key=None,
                     metadata=None,
                     encoding='utf-8')
-    os.chmod(key_filename, 0o644)
 
 
 def _write_secret_key_file(key_filename, current_time,
                            public_key, secret_key, metadata):
     banner = _cert_secret_banner.format(current_time)
+    _create_file_with_mode(key_filename, 0o600)
     _write_key_file(key_filename,
                     banner,
                     public_key,
                     secret_key=secret_key,
                     metadata=metadata,
                     encoding='utf-8')
-    os.chmod(key_filename, 0o600)
+
+
+def _create_file_with_mode(path, mode):
+    open(path, 'a').close()
+    os.chmod(path, mode)
 
 
 def createEncAndSigKeys(enc_key_dir, sig_key_dir, name, seed=None):
